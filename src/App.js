@@ -1,25 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from "./components/Header";
+import NotesSection from "./components/NotesSection";
+import AddNote from "./components/AddNote";
+import {useState} from "react";
+import {getInitialData} from "./utils";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [notes, setNotes] = useState(getInitialData);
+    const [searchKeyword, setSearchKeyword] = useState("");
+
+    const addNote = (note) => {
+        const noteList = [...notes];
+
+        noteList.push(note);
+        setNotes(noteList);
+    }
+
+    const searchNote = (event) => {
+        setSearchKeyword(event.target.value.toUpperCase());
+    }
+
+    return (
+        <div className="relative">
+            <Header searchNote={searchNote}/>
+            <NotesSection notes={notes.filter(note => note.title.toUpperCase().includes(searchKeyword) || note.body.toUpperCase().includes(searchKeyword))} setNotes={setNotes}/>
+            <AddNote addNote={addNote}/>
+       </div>
+    );
 }
 
 export default App;
